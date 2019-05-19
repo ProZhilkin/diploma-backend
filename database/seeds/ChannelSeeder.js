@@ -1,13 +1,14 @@
 'use strict'
 
-const Channel = use('App/Models/Channel')
+const Video = use('App/Models/Video')
 const Factory = use('Factory')
 
 class ChannelSeeder {
   async run () {
-    const channel = new Channel()
-    channel.channel_id = 'UCLUwAjLQ34CUa-UVuF1VWCw'
-    await channel.save()
+    const video = new Video()
+    video.name = 'Ростов Главный — новости Ростова-на-Дону'
+    video.owner_id = -36039
+    await video.save()
   }
 }
 

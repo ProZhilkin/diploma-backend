@@ -21,11 +21,11 @@ class FavoriteChannelController {
   }
 
   async list ({ auth }) {
-    const favoritesChannels = await FavoriteChannel
+    const favoriteChannels = await FavoriteChannel
       .query()
       .where('user_id', auth.user.id)
       .fetch()
-    return favoritesChannels
+    return favoriteChannels
   }
 }
 

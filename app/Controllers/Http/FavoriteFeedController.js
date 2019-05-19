@@ -21,11 +21,11 @@ class FavoriteFeedController {
   }
 
   async list ({ auth }) {
-    const favoritesFeeds = await FavoriteFeed
+    const favoriteFeeds = await FavoriteFeed
       .query()
       .where('user_id', auth.user.id)
       .fetch()
-    return favoritesFeeds
+    return favoriteFeeds
   }
 }
 
