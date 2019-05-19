@@ -18,6 +18,7 @@ Route.group(() => {
   Route.post('/feed', 'FeedController.create')
   Route.get('/feed', 'FeedController.getByUrl')
   Route.get('/videos', 'VideoController.show')
+  Route.post('/video', 'VideoController.create')
   Route.get('/favorite/channels', 'FavoriteChannelController.list')
   Route.post('/favorite/channel', 'FavoriteChannelController.create')
   Route.delete('/favorite/channel', 'FavoriteChannelController.remove')
