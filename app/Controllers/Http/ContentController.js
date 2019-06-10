@@ -1,31 +1,58 @@
 'use strict'
 
-const Content = use('App/Models/Content')
 const File = use('App/Models/File')
 const Helpers = use('Helpers')
+const VkDownloader = require('../../../utilities/VkDownloader')
+const YoutubeDownloader = require('../../../utilities/YoutubeDownloader')
 
 class ContentController {
-  async save ({ request }) {
-    const data = request.all()
-    const method = data.type === 'audio' ? 'saveAudio' : 'saveVideo'
-    const where = { hash: data.hash, type: data.type }
+  async saveVk ({ request }) {
+    let data = request.all()
+    let vkDownloader = new VkDownloader(data.owner_id, data.id, data.type)
+    let fileName = vkDownloader.getFileName(data.type)
+    let file = await File.findBy({ name: fileName, type: data.type })
+    if (file) return { status: true, file }
     try {
-      let file = await File.findBy(where)
-      if (!file) {
-        let savedFile = await Content[method](data)
-        file = new File()
-        file.name = savedFile.name
-        file.hash = savedFile.hash
-        file.type = savedFile.type
-        await file.save()
-      }
+      let methodName = data.type === 'audio' ? 'saveAudio' : 'saveVideo'
+      await vkDownloader[methodName]()
+      file = new File()
+      file.hash = data.owner_id + '_' + data.id
+      file.name = fileName
+      file.type = data.type
+      await file.save()
       return { status: true, file }
-    } catch {
-      return { status: false }
+    } catch (error) {
+      return { status: false, error }
     }
   }
 
-  async show ({ params, response }) {
+  async saveYoutube ({ request }) {
+    let data = request.all()
+    let youtubeDownloader = new YoutubeDownloader()
+    let file = await File.findBy({ hash: data.hash, type: data.type })
+    if (file) return { status: true, file }
+    try {
+      let methodName = data.type === 'audio' ? 'saveAudio' : 'saveVideo'
+      let saved = await youtubeDownloader[methodName](data)
+      file = new File()
+      file.hash = data.hash
+      file.name = saved.name
+      file.type = data.type
+      await file.save()
+      return { status: true, file }
+    } catch (error) {
+      return { status: false, error }
+    }
+  }
+
+  async showVk ({ params, response }) {
+    const { hash, type } = params
+    const where = { hash, type }
+    const file = await File.findBy(where)
+    return response.download(Helpers.tmpPath(file.name))
+  }
+
+  async showYoutube ({ params, response }) {
     const { hash, type } = params
     const where = { hash, type }
     const file = await File.findBy(where)

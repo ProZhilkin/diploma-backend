@@ -6,7 +6,7 @@ class FilesSchema extends Schema {
   up () {
     this.create('files', (table) => {
       table.increments()
-      table.string('hash', 255).notNullable()
+      table.string('hash', 255)
       table.string('type', 255).notNullable()
       table.string('name', 255).notNullable()
       table.timestamps()

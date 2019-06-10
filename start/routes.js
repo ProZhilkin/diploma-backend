@@ -2,7 +2,8 @@
 
 const Route = use('Route')
 
-Route.get('/content/:type/:hash', 'ContentController.show')
+Route.get('/content/vk/:type/:hash', 'ContentController.showVk')
+Route.get('/content/youtube/:type/:hash', 'ContentController.showYoutube')
 
 Route.group(() => {
   Route.post('/user/login', 'UserController.login')
@@ -28,5 +29,6 @@ Route.group(() => {
   Route.get('/favorite/videos', 'FavoriteVideoController.list')
   Route.post('/favorite/video', 'FavoriteVideoController.create')
   Route.delete('/favorite/video', 'FavoriteVideoController.remove')
-  Route.put('/content', 'ContentController.save')
+  Route.put('/content/youtube', 'ContentController.saveYoutube')
+  Route.put('/content/vk', 'ContentController.saveVk')
 }).middleware('auth')
